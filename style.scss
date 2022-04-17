@@ -1,0 +1,44 @@
+$color:#AC613B;
+body{
+    text-align: center;
+}
+table, th, td{
+    margin: auto;
+    border: 1px solid black;
+}
+
+table{
+    border-collapse: collapse;
+}
+
+td{
+    padding: 1.5em;
+    text-align: center;
+}
+
+tr{
+    td{
+        background-color: lighten($color, 10);
+        &.got{
+            background-color: white;
+        }
+        &:nth-child(even){
+            background-color: $color;
+            &.got{
+                background-color: wheat;
+            }
+        }
+    }
+    &:nth-child(even) td{
+        background-color: $color;
+        &.got{
+            background-color: wheat;
+        }
+        &:nth-child(even){
+            background-color: lighten($color, 10);
+            &.got{
+                background-color: white;
+            }
+        }
+    }
+}

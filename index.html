@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<!-- Copyright kocka-collector. CC-BY-SA -->
+<head>
+    <title>Kolo Bingo | helloitskolo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="specific">
+    <table id=cards>
+    </table>
+    
+<script>
+
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            // And swap it with the current element.
+            [array[currentIndex], array[randomIndex]] = [
+                array[randomIndex], array[currentIndex]];
+        }
+
+        return array;
+    }
+
+    var columns = 5;
+    var rows = 5;
+    var cardtable = Array();
+    var table = document.getElementById("cards");
+    for (var i = 0; i < rows; i++) {
+        row = document.createElement("tr");
+        table.appendChild(row);
+        cardtable[i] = Array();
+        for (var j = 0; j < columns; j++) {
+            card = document.createElement("td");
+            card.addEventListener("click", (e) => {
+                console.log(e);
+                e.target.classList.toggle("got");
+            })
+            row.appendChild(card);
+            cardtable[i][j] = card;
+        }
+    }
+    fetch("cards.json")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("error: could not get relevant data for cards.");
+            }
+            return response.json();
+        })
+        .then((json) => {
+            //console.log(json);
+            if (json.cards === undefined) {
+                throw new Error("data malformed.");
+            }
+            //console.log(Object.keys(json.cards));
+            o = Object.keys(json.cards)
+            for (let name in o) {
+                if (o[name] === "any") {
+                    continue;
+                }
+                re = /card-([0-9]*)-([0-9]*)/ig;
+                array = re.exec(o[name]);
+                cardtable[array[1]][array[2]].dataset.values = shuffle(json.cards[o[name]])[0];
+            }
+            var list = shuffle(json.cards.any);
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < columns; j++) {
+                    if (cardtable[i][j].dataset.values === undefined) {
+                        cardtable[i][j].dataset.values = list.pop();
+                    }
+                    cardtable[i][j].innerText = cardtable[i][j].dataset.values;
+                }
+            }
+        });
+</script>
+</body>
+</html>
