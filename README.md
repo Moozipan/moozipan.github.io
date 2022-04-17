@@ -1,2 +1,2 @@
-# moozipan.github.io
-Kolo Bingo
+# pages
+
